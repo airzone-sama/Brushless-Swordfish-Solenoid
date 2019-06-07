@@ -74,12 +74,13 @@ bool RequestAutoStop = false; // Set to true to stop Full Auto
 
 // Motor Controls
 #define MOTOR_SPINUP_LAG 100 // How long we give the motors before we know that have spun up.
-#define MOTOR_SPINDOWN_3S 4000
+#define MOTOR_SPINDOWN_3S 2400
 #define MOTOR_SPINDOWN_4S 6000
 #define MOTOR_SPINUP_3S 0
 #define MOTOR_SPINUP_4S 0
-#define MOTOR_MAX_SPEED 2000
-int MaxMotorSpeed = MOTOR_MAX_SPEED;
+#define MOTOR_MAX_SPEED_3S 1570
+#define MOTOR_MAX_SPEED_4S 1800
+int MaxMotorSpeed = 1000;
 int DecelerateTime = 0;
 int AccelerateTime = 0;
 long MotorRampUpPerMS = 0;
@@ -223,6 +224,8 @@ void setup() {
 
     DecelerateTime = MOTOR_SPINDOWN_3S;
     AccelerateTime = MOTOR_SPINUP_3S;
+
+    MaxMotorSpeed = MOTOR_MAX_SPEED_3S;
   }
   else
   {
@@ -237,6 +240,8 @@ void setup() {
 
     DecelerateTime = MOTOR_SPINDOWN_4S;
     AccelerateTime = MOTOR_SPINUP_4S;
+
+    MaxMotorSpeed = MOTOR_MAX_SPEED_4S;
   }
 
   SystemMode = MODE_NORMAL;
@@ -776,8 +781,8 @@ void ProcessMainMotors()
     Serial.println(CurrentMotorSpeed);
 
     // Use this for Servo Library
-    if( CurrentMotorSpeed > MOTOR_MAX_SPEED )
-      UpdatePWM( MOTOR_MAX_SPEED );
+    if( CurrentMotorSpeed > MaxMotorSpeed )
+      UpdatePWM( MaxMotorSpeed );
     else
       UpdatePWM( CurrentMotorSpeed );
 
